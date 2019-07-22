@@ -1,6 +1,5 @@
 package idwall.desafio.string;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -55,8 +54,8 @@ public class IdwallFormatter extends StringFormatter {
 
             }
 
-            if(justify)
-                formattedLine = justifyLine(formattedLine, limit);
+            if(justify && !formattedLine.equals(""))
+                formattedLine = IdwallJustifier.justify(formattedLine, limit);
 
             outputLines.add(formattedLine);
 //            System.out.println("Output:");
@@ -84,12 +83,6 @@ public class IdwallFormatter extends StringFormatter {
         return stack;
     }
 
-    //TODO
-    protected String justifyLine(String line, Integer limit) {
-        return line;
-    }
-
-    //TODO
     protected Integer calculateCuttingIndex(String line, Integer limit) {
         if (String.valueOf(line.charAt(limit)).equals(" "))
             return limit;
@@ -98,7 +91,6 @@ public class IdwallFormatter extends StringFormatter {
         return trunkedLine.lastIndexOf(" ");
     }
 
-    //TODO
     protected String consolidateText(List<String> lines) {
         return String.join("\r\n", lines);
     }
