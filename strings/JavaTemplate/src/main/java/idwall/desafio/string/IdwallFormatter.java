@@ -1,5 +1,6 @@
 package idwall.desafio.string;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -24,58 +25,81 @@ public class IdwallFormatter extends StringFormatter {
      */
     @Override
     public String format(String text) {
-        Queue<String> inputLines = parseInputLinesQueue(text);
+        Stack<String> inputLines = parseInputLinesStack(text);
         List<String> outputLines = new ArrayList<>();
 
 
         while (inputLines.size() > 0) {
-            String line = inputLines.poll();
+            String line = inputLines.pop();
+            String formattedLine = line;
 
             if(line.length() > limit) {
 
-                Integer cuttingIndex = limit;
-                if (!String.valueOf(line.charAt(limit + 1)).equals(" "))
-                    cuttingIndex = calculateCuttingIndex(line, limit);
+                Integer cuttingIndex = calculateCuttingIndex(line, limit);
 
-                line = line.substring(0, cuttingIndex);
+                formattedLine = line.substring(0, cuttingIndex);
+
                 String tail = line.substring(cuttingIndex);
-                String nextLine = inputLines.poll();
+                tail = tail.trim();
+                String nextLine = "";
+
+                if(inputLines.size() != 0) {
+                    nextLine = inputLines.pop();
+                    if (nextLine.equals(""))
+                        inputLines.push(nextLine);
+                }
+
                 nextLine =  tail + " " + nextLine;
-                inputLines.add(nextLine);
+                nextLine = nextLine.trim();
+                inputLines.push(nextLine);
 
             }
 
             if(justify)
-                line = justifyLine(line, limit);
+                formattedLine = justifyLine(formattedLine, limit);
 
-            outputLines.add(line);
+            outputLines.add(formattedLine);
+//            System.out.println("Output:");
+//            for(String outLine : outputLines) {
+//                System.out.println(outLine);
+//            }
+//            System.out.println();
 
         }
 
         return consolidateText(outputLines);
     }
 
-    private Queue<String> parseInputLinesQueue(String text) {
+    protected Stack<String> parseInputLinesStack(String text) {
 
-        Queue<String> queue = new LinkedList<>();
-        List<String> inputLines = Arrays.asList(text.split("\\r?\\n"));
+        Stack<String> stack = new Stack<>();
+        List<String> inputLines = new ArrayList<>();
+        inputLines.addAll(Arrays.asList(text.split("\\r?\\n")));
+
+        if(String.valueOf(text.charAt(text.length() - 1)).matches("\\r?\\n"))
+            inputLines.add("");
+
         Collections.reverse(inputLines);
-        queue.addAll(inputLines);
-        return queue;
+        stack.addAll(inputLines);
+        return stack;
     }
 
     //TODO
-    private String justifyLine(String line, Integer limit) {
+    protected String justifyLine(String line, Integer limit) {
         return line;
     }
 
     //TODO
-    private Integer calculateCuttingIndex(String line, Integer limit) {
-        return limit;
+    protected Integer calculateCuttingIndex(String line, Integer limit) {
+        if (String.valueOf(line.charAt(limit)).equals(" "))
+            return limit;
+
+        String trunkedLine = line.substring(0, limit);
+        return trunkedLine.lastIndexOf(" ");
     }
 
     //TODO
-    private String consolidateText(List<String> lines) {
-        return String.join("\\r\\n", lines);
+    protected String consolidateText(List<String> lines) {
+        return String.join("\r\n", lines);
     }
 }
