@@ -14,12 +14,24 @@ public class IdwallJustifier {
     // a regra de distribuição dos espaçamentos é alternar entre os espaçamentos de tamanho menor e maior
     // começando sempre com um espaçamento de tamanho maior e completando os ultimos espacamentos com
     public static String justify(String line, Integer limit) {
+        if(line.isEmpty())
+            return line;
+
+
         List<String> words =  Arrays.asList(line.split(" "));
 
         Integer numberOfSpaces = words.size() - 1;
         Integer complementToLimit = limit - line.length();
-        Integer defaultSpaceSize = (complementToLimit / numberOfSpaces) + 1;
-        Integer quantityOfBiggerSpaces = complementToLimit % numberOfSpaces;
+        Integer defaultSpaceSize = 0;
+        Integer quantityOfBiggerSpaces = 0;
+
+        if (numberOfSpaces > 0) {
+            defaultSpaceSize = (complementToLimit / numberOfSpaces) + 1;
+            quantityOfBiggerSpaces = complementToLimit % numberOfSpaces;
+        } else {
+            defaultSpaceSize = complementToLimit / 2;
+            quantityOfBiggerSpaces = complementToLimit % 2;
+        }
 
         String defaultSpace = Stream.generate(() -> (String.valueOf(" "))).limit(defaultSpaceSize).collect(Collectors.joining());
 
