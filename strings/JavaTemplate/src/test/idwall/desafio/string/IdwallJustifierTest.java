@@ -2,6 +2,11 @@ package idwall.desafio.string;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class IdwallJustifierTest {
 
     @Test
@@ -39,9 +44,52 @@ public class IdwallJustifierTest {
         runAndAssert(line, expected, 40);
     }
 
+    @Test
+    public void shouldJustifyLine() {
+        String line =  "\"day,\" and the darkness he called";
+        String justifiedLine = "\"day,\"   and  the   darkness  he  called";
+        String result = IdwallJustifier.justify(line, 40);
+        System.out.println(result);
+        System.out.println(justifiedLine);
+
+    }
+
+    @Test
+    public void shouldJustifyLine2() {
+        String line =  "was good, and he separated the light";
+        String justifiedLine = "was  good, and  he separated  the  light";
+        String result = IdwallJustifier.justify(line, 40);
+        System.out.println(result);
+        System.out.println(justifiedLine);
+
+    }
+
+    @Test
+    public void teste3() {
+        System.out.println(String.valueOf(7/5));
+        System.out.println(String.valueOf(7%7));
+    }
+
+    @Test
+    public void teste4() {
+        IntStream.range(1, 7).forEach(x -> System.out.println(x));
+        IntStream.range(1, 7).filter(x -> x % 2 == 1).forEach(x -> System.out.println(x));
+        List<Integer> biggerSpaceIndex = IntStream.range(1, 6).filter(x -> x % 2 == 1).limit(4).boxed().collect(Collectors.toList());
+    }
+
+    @Test
+    public void teste5() {
+        List<String> words = Arrays.asList("eu", "tu", "vc", "ele", "eles");
+        List<String> spaces = Arrays.asList("   ", "  ", "   ", "  ");
+
+        System.out.println(IdwallJustifier.joinWordsAndSpaces(words, spaces));
+    }
+
     private void runAndAssert(String line, String expected, Integer limit) {
         String result = IdwallJustifier.justify(line, limit);
         assert (expected.equals(result));
     }
+
+
 
 }

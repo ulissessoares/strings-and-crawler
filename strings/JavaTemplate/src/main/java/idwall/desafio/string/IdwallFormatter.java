@@ -73,10 +73,10 @@ public class IdwallFormatter extends StringFormatter {
 
         Stack<String> stack = new Stack<>();
         List<String> inputLines = new ArrayList<>();
-        inputLines.addAll(Arrays.asList(text.split("\\r?\\n")));
+        inputLines.addAll(Arrays.asList(text.split("\\r?\\n", -1)));
 
-        if(String.valueOf(text.charAt(text.length() - 1)).matches("\\r?\\n"))
-            inputLines.add("");
+//        if(text.length() > 0 && String.valueOf(text.charAt(text.length() - 1)).matches("\\r?\\n"))
+//            inputLines.add("");
 
         Collections.reverse(inputLines);
         stack.addAll(inputLines);
