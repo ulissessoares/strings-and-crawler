@@ -7,16 +7,24 @@ import java.util.stream.Collectors;
 
 public class TestUtils {
 
-    public static void wrappedTextShouldHaveMoreLinesThanUnwrappedText(String wrappedText, String unwrappedText) {
+    public static void wrappedTextShouldHaveMoreThanOrSameLinesThatUnwrappedText(String wrappedText, String unwrappedText) {
         List<String> wrappedLines = getLines(wrappedText);
         List<String> unwrappedLines = getLines(unwrappedText);
 
-        assert (wrappedLines.size() > unwrappedLines.size());
+        assert (wrappedLines.size() >= unwrappedLines.size());
     }
 
     public static void wrappedTextLinesShouldBeSmallerOrEqualThanLineLimit(String wrappedText, Integer limit) {
         List<String> wrappedLines = getLines(wrappedText);
         wrappedLines.forEach(line -> {assert(line.length() <= limit);});
+    }
+
+    public static void wrappedTextNotBlankLinesShouldHaveEqualLengthThanLineLimit(String wrappedText, Integer limit) {
+        List<String> wrappedLines = getLines(wrappedText);
+        wrappedLines.forEach(line -> {
+            if (!line.isEmpty())
+                assert(line.length() == limit);
+        });
     }
 
     public static void wrappedTextShouldHaveTheSameNumerOfBlankLinesThatOfTheUnwrappedText(String wrappedText, String unwrappedText) {
@@ -52,7 +60,7 @@ public class TestUtils {
     public static List<String> getAllWords(String text) {
         text = text.replaceAll("[\\r?\\n]+", " ");
         List<String> words = new ArrayList<>();
-        words.addAll(Arrays.asList(text.split(" ")));
+        words.addAll(Arrays.asList(text.split("\\S+")));
 
         return words;
     }

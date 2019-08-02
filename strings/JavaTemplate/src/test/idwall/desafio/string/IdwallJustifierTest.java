@@ -85,6 +85,22 @@ public class IdwallJustifierTest {
         System.out.println(IdwallJustifier.joinWordsAndSpaces(words, spaces));
     }
 
+    @Test
+    public void test6() {
+        List<String> words =  Arrays.asList("word".split(" "));
+        words.forEach(System.out::println);
+        System.out.println(words.size());
+
+
+    }
+
+    @Test
+    public void test7() {
+        String lineToJustify = "word";
+        String result = IdwallJustifier.justify(lineToJustify, 10);
+        assert (result.equals(lineToJustify));
+    }
+
     private void runAndAssert(String line, String expected, Integer limit) {
         String result = IdwallJustifier.justify(line, limit);
         assert (expected.equals(result));

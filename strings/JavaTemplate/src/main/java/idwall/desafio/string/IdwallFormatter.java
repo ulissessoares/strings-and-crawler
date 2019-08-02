@@ -34,11 +34,11 @@ public class IdwallFormatter extends StringFormatter {
 
             if(line.length() > limit) {
 
-                Integer cuttingIndex = calculateCuttingIndex(line, limit);
+                Integer wrapIndex = calculateWrapIndex(line, limit);
 
-                formattedLine = line.substring(0, cuttingIndex);
+                formattedLine = line.substring(0, wrapIndex);
 
-                String tail = line.substring(cuttingIndex);
+                String tail = line.substring(wrapIndex);
                 tail = tail.trim();
                 String nextLine = "";
 
@@ -58,11 +58,6 @@ public class IdwallFormatter extends StringFormatter {
                 formattedLine = IdwallJustifier.justify(formattedLine, limit);
 
             outputLines.add(formattedLine);
-//            System.out.println("Output:");
-//            for(String outLine : outputLines) {
-//                System.out.println(outLine);
-//            }
-//            System.out.println();
 
         }
 
@@ -75,15 +70,12 @@ public class IdwallFormatter extends StringFormatter {
         List<String> inputLines = new ArrayList<>();
         inputLines.addAll(Arrays.asList(text.split("\\r?\\n", -1)));
 
-//        if(text.length() > 0 && String.valueOf(text.charAt(text.length() - 1)).matches("\\r?\\n"))
-//            inputLines.add("");
-
         Collections.reverse(inputLines);
         stack.addAll(inputLines);
         return stack;
     }
 
-    protected Integer calculateCuttingIndex(String line, Integer limit) {
+    protected Integer calculateWrapIndex(String line, Integer limit) {
         if (String.valueOf(line.charAt(limit)).equals(" "))
             return limit;
 
