@@ -7,6 +7,8 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
@@ -69,32 +71,6 @@ public class IdwallFormatterParameterizedTest {
         }
 
         @Test
-        public void wrappedTextShouldHaveMoreThanOrSameLinesThatUnwrappedText() {
-                TestUtils.wrappedTextShouldHaveMoreThanOrSameLinesThatUnwrappedText(wrappedText, unwrappedText);
-        }
-
-        @Test
-        public void wrappedTextLinesShouldBeSmallerOrEqualThanLineLimit() {
-                TestUtils.wrappedTextLinesShouldBeSmallerOrEqualThanLineLimit(wrappedText, wrapLimit);
-        }
-
-        @Test
-        public void wrappedTextLinesShouldHaveEqualLengthThanLineLimit() {
-                assumeTrue(justify);
-                TestUtils.wrappedTextNotBlankLinesShouldHaveEqualLengthThanLineLimit(wrappedText, wrapLimit);
-        }
-
-        @Test
-        public void wrappedTextShouldHaveTheSameNumerOfBlankLinesThatOfTheUnwrappedText() {
-                TestUtils.wrappedTextShouldHaveTheSameNumerOfBlankLinesThatOfTheUnwrappedText(wrappedText, unwrappedText);
-        }
-
-        @Test
-        public void wrappedTextShouldHaveTheSameWordCountThatOfUnwrappedText() {
-                TestUtils.wrappedTextShouldHaveTheSameWordCountThatOfUnwrappedText(wrappedText, unwrappedText);
-        }
-
-        @Test
         public void wrappedTextShouldBeEqualExpectedWrappedText() {
                 System.out.println("Wrapped Text:");
                 System.out.println(wrappedText);
@@ -104,6 +80,50 @@ public class IdwallFormatterParameterizedTest {
                 assert expectedWrappedText.equals(wrappedText);
         }
 
+        @Test
+        public void wrappedTextShouldHaveMoreThanOrSameLinesThatUnwrappedText() {
+                List<String> wrappedLines = TestUtils.getLines(wrappedText);
+                List<String> unwrappedLines = TestUtils.getLines(unwrappedText);
+
+                assert (wrappedLines.size() >= unwrappedLines.size());
+        }
+
+        @Test
+        public void wrappedTextLinesShouldBeSmallerOrEqualThanLineLimit() {
+                List<String> wrappedLines = TestUtils.getLines(wrappedText);
+                wrappedLines.forEach(line -> {assert(line.length() <= wrapLimit);});
+        }
+
+        @Test
+        public void wrappedTextNotBlankLinesShouldHaveEqualLengthThanLineLimit() {
+                assumeTrue(justify);
+                List<String> wrappedLines = TestUtils.getLines(wrappedText);
+                wrappedLines.forEach(line -> {
+                        if (!line.isEmpty())
+                                assert(line.length() == wrapLimit);
+                });
+        }
+
+        @Test
+        public void wrappedTextShouldHaveTheSameNumerOfBlankLinesThatOfTheUnwrappedText() {
+                List<String> wrappedBlankLines = TestUtils.getLines(wrappedText).stream().filter(line -> line.isEmpty()).collect(Collectors.toList());
+                List<String> unwrappedBlankLines = TestUtils.getLines(unwrappedText).stream().filter(line -> line.isEmpty()).collect(Collectors.toList());
+
+                System.out.println("Wrapped Blank Lines size: " + String.valueOf(wrappedBlankLines.size()));
+                System.out.println("Unwrapped Blank Lines size: " + String.valueOf(unwrappedBlankLines.size()));
+                assert (wrappedBlankLines.size() == unwrappedBlankLines.size());
+        }
+
+        @Test
+        public void wrappedTextShouldHaveTheSameWordCountThatOfUnwrappedText() {
+                List<String> wrappedTextWords = TestUtils.getAllWords(wrappedText);
+                List<String> unwrappedTextWords = TestUtils.getAllWords(unwrappedText);
+
+
+                System.out.println("Wrapped text words size: " + String.valueOf(wrappedTextWords.size()));
+                System.out.println("Unwrapped text words size: " + String.valueOf(unwrappedTextWords.size()));
+                assert (wrappedTextWords.size() == unwrappedTextWords.size());
+        }
 
 
 

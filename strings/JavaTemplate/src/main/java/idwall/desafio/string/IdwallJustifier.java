@@ -25,10 +25,10 @@ public class IdwallJustifier {
             return line;
 
 
-        List<String> words =  Arrays.asList(line.split(SINGLE_CHAR_SPACE));
+        List<String> words =  Arrays.asList(line.split("\\s+"));
 
         Integer numberOfSpaces = words.size() - 1;
-        Integer complementToLimit = limit - line.length();
+        Integer complementToLimit = calculateComplementToLimit(words, numberOfSpaces, limit);
         Integer smallSpaceSize = 0;
         Integer quantityOfBigSpaces = 0;
 
@@ -98,6 +98,11 @@ public class IdwallJustifier {
 
         biggerSpaceIndex.forEach(x -> spaces.set(x - 1, otherSpace));
         return spaces;
+    }
+
+    public static Integer calculateComplementToLimit(List<String> words, Integer numberOfSpaces, Integer limit) {
+        Integer totalLength = words.stream().mapToInt(String::length).sum() + numberOfSpaces;
+        return limit - totalLength;
     }
 
 
