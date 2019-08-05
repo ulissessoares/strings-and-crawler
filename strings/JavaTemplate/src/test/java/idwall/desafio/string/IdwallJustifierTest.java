@@ -10,7 +10,8 @@ public class IdwallJustifierTest {
     @Test
     public void justifyEmptyLineShouldReturnEmptyLine() {
         String lineToJustify = "";
-        String result = IdwallJustifier.justify(lineToJustify, 10);
+        IdwallJustifier justifier = new IdwallJustifier(10);
+        String result = justifier.justify(lineToJustify);
         assert (result.equals(lineToJustify));
     }
 
@@ -68,7 +69,8 @@ public class IdwallJustifierTest {
     }
 
     private void runAndAssert(String line, String expected, Integer limit) {
-        String result = IdwallJustifier.justify(line, limit);
+        IdwallJustifier justifier = new IdwallJustifier(limit);
+        String result = justifier.justify(line);
         System.out.println(result);
         assert (expected.equals(result));
     }

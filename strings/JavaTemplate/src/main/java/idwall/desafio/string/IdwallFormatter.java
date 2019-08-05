@@ -8,11 +8,13 @@ import java.util.*;
 public class IdwallFormatter extends StringFormatter {
 
     private Boolean justify;
+    private StringJustifier justifier;
 
     public IdwallFormatter(Integer limit, Boolean justify) {
         super();
         this.limit = limit;
         this.justify = justify;
+        this.justifier = new IdwallJustifier(limit);
 
     }
 
@@ -55,7 +57,7 @@ public class IdwallFormatter extends StringFormatter {
             }
 
             if(justify && !formattedLine.equals(""))
-                formattedLine = IdwallJustifier.justify(formattedLine, limit);
+                formattedLine = justifier.justify(formattedLine);
 
             outputLines.add(formattedLine);
 

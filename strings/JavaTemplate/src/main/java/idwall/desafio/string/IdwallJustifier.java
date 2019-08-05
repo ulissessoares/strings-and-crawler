@@ -5,22 +5,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.IntPredicate;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class IdwallJustifier {
+public class IdwallJustifier implements  StringJustifier{
 
 
-    private static final String SINGLE_CHAR_SPACE = " ";
+    private final String SINGLE_CHAR_SPACE = " ";
+    private Integer limit;
+
+    public IdwallJustifier(Integer limit) {
+        this.limit = limit;
+    }
 
     // Justifica a linha
     // calcula quantos caracteres faltam para completar o tamanho da linha
     // calcula o tamanho dos espaços entre as palavras e como é feita a distribuição desses espaços
     // calcula como distribuir os espaços de tamanho diferentes entre as palavras, criando uma lista com esses espaços ja ordenados
     // faz join entre as palavras e os espaços com tamanho ajustado
-    public static String justify(String line, Integer limit) {
+    public String justify(String line) {
         if(line.isEmpty())
             return line;
 
@@ -55,7 +59,7 @@ public class IdwallJustifier {
         return joinWordsAndSpaces(words, spaces);
     }
 
-    public static String joinWordsAndSpaces(List<String> words, List<String> spaces) {
+    protected String joinWordsAndSpaces(List<String> words, List<String> spaces) {
         List<String> wordsAndSpaces = new ArrayList<>();
         Integer indexWords = 0;
         Integer indexSpaces = 0;
@@ -86,7 +90,7 @@ public class IdwallJustifier {
 
     }
 
-    public static List<String> generateSpacesArray(Integer numberOfSpaces, String defaultSpace, String otherSpace, IntPredicate filterPredicate, Integer bigSpacesIndexesSize) {
+    protected List<String> generateSpacesArray(Integer numberOfSpaces, String defaultSpace, String otherSpace, IntPredicate filterPredicate, Integer bigSpacesIndexesSize) {
         List<String> spaces = new ArrayList<>();
 
         spaces.addAll(Collections.nCopies(numberOfSpaces, defaultSpace));
@@ -100,7 +104,7 @@ public class IdwallJustifier {
         return spaces;
     }
 
-    public static Integer calculateComplementToLimit(List<String> words, Integer numberOfSpaces, Integer limit) {
+    protected Integer calculateComplementToLimit(List<String> words, Integer numberOfSpaces, Integer limit) {
         Integer totalLength = words.stream().mapToInt(String::length).sum() + numberOfSpaces;
         return limit - totalLength;
     }
