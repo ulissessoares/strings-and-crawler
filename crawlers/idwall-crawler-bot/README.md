@@ -40,5 +40,5 @@ Os principais componentes são:
 ## Build e Execução
 
 * Para efetuar o build basta executar o comando mvn clean install
-* Para executar a aplicação é necessário fornecer um arquivo [aplication.properties](/src/main/resources/application.properties) (preferencialmente no mesmo diretório onde esta jar da aplicação) e executar o comando java -jar idwall-crawler-bot-0.0.1-SNAPSHOT.jar
+* Para executar a aplicação é necessário fornecer um arquivo [aplication.properties](https://github.com/ulissessoares/strings-and-crawler/blob/master/crawlers/idwall-crawler-bot/src/main/resources/application.properties) (preferencialmente no mesmo diretório onde esta jar da aplicação) e executar o comando java -jar idwall-crawler-bot-0.0.1-SNAPSHOT.jar
 * O arquivo application.properties deve conter obrigatoriamente os paramêtros de credenciais do Bot do Telegram (userName e token)
