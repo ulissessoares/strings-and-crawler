@@ -8,11 +8,13 @@ import java.util.*;
 public class IdwallFormatter extends StringFormatter {
 
     private Boolean justify;
+    private StringJustifier justifier;
 
     public IdwallFormatter(Integer limit, Boolean justify) {
         super();
         this.limit = limit;
         this.justify = justify;
+        this.justifier = new IdwallJustifier(limit);
 
     }
 
@@ -24,58 +26,66 @@ public class IdwallFormatter extends StringFormatter {
      */
     @Override
     public String format(String text) {
-        Queue<String> inputLines = parseInputLinesQueue(text);
+        Stack<String> inputLines = parseInputLinesStack(text);
         List<String> outputLines = new ArrayList<>();
 
 
         while (inputLines.size() > 0) {
-            String line = inputLines.poll();
+            String line = inputLines.pop();
+            String formattedLine = line;
 
             if(line.length() > limit) {
 
-                Integer cuttingIndex = limit;
-                if (!String.valueOf(line.charAt(limit + 1)).equals(" "))
-                    cuttingIndex = calculateCuttingIndex(line, limit);
+                Integer wrapIndex = calculateWrapIndex(line, limit);
 
-                line = line.substring(0, cuttingIndex);
-                String tail = line.substring(cuttingIndex);
-                String nextLine = inputLines.poll();
+                formattedLine = line.substring(0, wrapIndex);
+
+                String tail = line.substring(wrapIndex);
+                tail = tail.trim();
+                String nextLine = "";
+
+                if(inputLines.size() != 0) {
+                    nextLine = inputLines.pop();
+                    if (nextLine.equals(""))
+                        inputLines.push(nextLine);
+                }
+
                 nextLine =  tail + " " + nextLine;
-                inputLines.add(nextLine);
+                nextLine = nextLine.trim();
+                inputLines.push(nextLine);
 
             }
 
-            if(justify)
-                line = justifyLine(line, limit);
+            if(justify && !formattedLine.equals(""))
+                formattedLine = justifier.justify(formattedLine);
 
-            outputLines.add(line);
+            outputLines.add(formattedLine);
 
         }
 
         return consolidateText(outputLines);
     }
 
-    private Queue<String> parseInputLinesQueue(String text) {
+    protected Stack<String> parseInputLinesStack(String text) {
 
-        Queue<String> queue = new LinkedList<>();
-        List<String> inputLines = Arrays.asList(text.split("\\r?\\n"));
+        Stack<String> stack = new Stack<>();
+        List<String> inputLines = new ArrayList<>();
+        inputLines.addAll(Arrays.asList(text.split("\\r?\\n", -1)));
+
         Collections.reverse(inputLines);
-        queue.addAll(inputLines);
-        return queue;
+        stack.addAll(inputLines);
+        return stack;
     }
 
-    //TODO
-    private String justifyLine(String line, Integer limit) {
-        return line;
+    protected Integer calculateWrapIndex(String line, Integer limit) {
+        if (String.valueOf(line.charAt(limit)).equals(" "))
+            return limit;
+
+        String trunkedLine = line.substring(0, limit);
+        return trunkedLine.lastIndexOf(" ");
     }
 
-    //TODO
-    private Integer calculateCuttingIndex(String line, Integer limit) {
-        return limit;
-    }
-
-    //TODO
-    private String consolidateText(List<String> lines) {
-        return String.join("\\r\\n", lines);
+    protected String consolidateText(List<String> lines) {
+        return String.join("\r\n", lines);
     }
 }
